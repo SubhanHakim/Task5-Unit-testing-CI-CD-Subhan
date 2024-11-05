@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { User, IUser } from '../models/auth.models';
 import databaseConfig from '../config/database';
 
