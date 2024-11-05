@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {User, IUser} from '../models/auth.models';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 interface SignInRequest {
