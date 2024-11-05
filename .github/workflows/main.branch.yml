@@ -25,8 +25,8 @@ jobs:
         run: npm install
         
       # Pastikan urutan yang benar
-      # - name: Run linter
-      #   run: npm run lint
+      - name: Run linter
+        run: npm run lint
         
       - name: Run tests
         run: npm test
