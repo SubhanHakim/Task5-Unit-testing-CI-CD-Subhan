@@ -1,4 +1,15 @@
-const mongoose = require("mongoose");
+import mongoose, { Document, Schema } from 'mongoose';
+
+/**
+ * Interface untuk Book Document
+ */
+export interface IBook extends Document {
+  title: string;
+  description: string;
+  author: string;
+  year: number;
+  toJSON(): any;
+}
 
 /**
  * @swagger
@@ -12,8 +23,7 @@ const mongoose = require("mongoose");
  *        - author
  *        - year
  */
-
-const bookSchema = new mongoose.Schema({
+const bookSchema = new Schema<IBook>({
   title: {
     type: String,
     required: true,
@@ -32,10 +42,12 @@ const bookSchema = new mongoose.Schema({
   },
 });
 
-bookSchema.method("toJSON", function () {
+bookSchema.method('toJSON', function(this: IBook) {
   const { __v, _id, ...object } = this.toObject();
-  object.id = _id;
-  return object;
+  return {
+    ...object,
+    id: _id
+  };
 });
 
-module.exports = mongoose.model("Book", bookSchema);
+export const Book = mongoose.model<IBook>('Book', bookSchema);

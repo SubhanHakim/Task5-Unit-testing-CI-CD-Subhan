@@ -1,8 +1,17 @@
-const User = require("../models/auth.models");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import { Request, Response } from 'express';
+import {User, IUser} from '../models/auth.models';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-exports.signin = async (req, res) => {
+interface SignInRequest {
+  name: string;
+  password: string;
+}
+
+export const signin = async (
+  req: Request<{}, {}, SignInRequest>, 
+  res: Response
+): Promise<Response> => {
   try {
     const { name, password } = req.body;
 
@@ -12,19 +21,24 @@ exports.signin = async (req, res) => {
         .json({ message: "Name dan password harus diisi!" });
     }
 
-    const user = await User.findOne({ name });
+    const user: IUser | null = await User.findOne({ name });
     if (!user) {
       return res.status(401).json({ message: "user not found!" });
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    const isPasswordValid: boolean = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid Password!" });
     }
 
-    const token = jwt.sign({ user: user.name }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token: string = jwt.sign(
+      { user: user.name }, 
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     // set cookie
     res.cookie("token", token, {
@@ -38,10 +52,13 @@ exports.signin = async (req, res) => {
       .header("Authorization", `Bearer ${token}`)
       .status(200)
       .json({ message: "Login Success!" });
+      
   } catch (error) {
-    console.error("Login error:", error);
     return res
       .status(400)
-      .json({ message: "Login error", error: error.message });
+      .json({ 
+        message: "Login error", 
+        error: 'Database error'
+      });
   }
 };
