@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { signin } from '../../controllers/authController';
 import { User, IUser } from '../../models/auth.models';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 jest.mock('../../models/auth.models');
-jest.mock('bcrypt');
+jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
 
 describe('Auth Controller', () => {
@@ -61,7 +61,7 @@ describe('Auth Controller', () => {
       };
 
       (User.findOne as jest.Mock).mockResolvedValueOnce(mockUser);
-      (bcrypt.compare as jest.Mock).mockResolvedValueOnce(false);
+      (bcryptjs.compare as jest.Mock).mockResolvedValueOnce(false);
 
       await signin(mockRequest as Request, mockResponse as Response);
 
@@ -79,7 +79,7 @@ describe('Auth Controller', () => {
       const mockToken = 'mocktoken123';
 
       (User.findOne as jest.Mock).mockResolvedValueOnce(mockUser);
-      (bcrypt.compare as jest.Mock).mockResolvedValueOnce(true);
+      (bcryptjs.compare as jest.Mock).mockResolvedValueOnce(true);
       (jwt.sign as jest.Mock).mockReturnValueOnce(mockToken);
 
       await signin(mockRequest as Request, mockResponse as Response);

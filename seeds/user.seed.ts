@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 import { User, IUser } from '../models/auth.models';
 import databaseConfig from '../config/database';
 
@@ -18,7 +18,7 @@ async function seedUser(): Promise<void> {
 
     // Buat credentials
     const password = "subhan321";
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     // Buat user baru
     const newUser: IUser = await User.create({

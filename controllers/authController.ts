@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {User, IUser} from '../models/auth.models';
-import bcrypt from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 interface SignInRequest {
@@ -26,7 +26,7 @@ export const signin = async (
       return res.status(401).json({ message: "user not found!" });
     }
 
-    const isPasswordValid: boolean = await bcrypt.compare(password, user.password);
+    const isPasswordValid: boolean = await bcryptjs.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid Password!" });
