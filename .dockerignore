@@ -1,12 +1,11 @@
+# .dockerignore
 node_modules
 npm-debug.log
-.env
 .git
 .gitignore
-README.md
-.dockerignore
-Dockerfile
-coverage
-dist
-*.test.ts
+.env
+*.md
+.DS_Store
 tests
+coverage
+.vscode

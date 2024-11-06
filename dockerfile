@@ -1,21 +1,28 @@
-FROM node:18-alpine
+# Dockerfile
+FROM node:18-alpine as base
 
 WORKDIR /
 
-# Copy package files
-COPY package*.json ./
+# Development stage
+FROM base as development
+ENV NODE_ENV=development
 
-# Install dependencies
+COPY package*.json ./
 RUN npm install
 
 # Copy source code
 COPY . .
 
-# Build TypeScript ke JavaScript
-RUN npm run build
+# Command untuk development dengan nodemon
+CMD ["npm", "run", "dev"]
 
-# Expose port
-EXPOSE 3000
+# Production stage
+FROM base as production
+ENV NODE_ENV=production
 
-# Hanya gunakan satu CMD instruction
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+
 CMD ["npm", "start"]

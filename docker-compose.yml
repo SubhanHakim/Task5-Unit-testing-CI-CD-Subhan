@@ -1,32 +1,28 @@
+version: '3.8'
+
 services:
   app:
-    container_name: express-app
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/bookdb
-      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/production
     depends_on:
-      - mongo
+      - mongodb
+    restart: unless-stopped
     networks:
       - app-network
-    restart: unless-stopped
 
-  mongo:
-    container_name: mongodb
-    image: mongo:latest
+  mongodb:
+    image: mongo:5.0
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
     networks:
       - app-network
-    restart: unless-stopped
-
+    
 networks:
   app-network:
     driver: bridge
