@@ -1,0 +1,21 @@
+version: '3.8'  # Tambahkan versi jika diperlukan
+
+services:
+  test:
+    build: 
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - NODE_ENV=test
+      - MONGODB_URI=mongodb://mongo-test:27017/testdb
+    depends_on:
+      - mongo-test
+
+  mongo-test:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+
+networks:
+  default:
+    name: test-network
