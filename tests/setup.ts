@@ -9,12 +9,8 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  // Perbaiki error iterator dengan menggunakan toArray()
-  const collections = mongoose.connection.collections;
-  
-  // Iterate over collections object
-  for (const key in collections) {
-    const collection = collections[key];
-    await collection.deleteMany({});
-  }
+  await Promise.all(
+    Object.values(mongoose.connection.collections)
+      .map(collection => collection.deleteMany({}))
+  );
 });
