@@ -1,30 +1,20 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const TEST_DB_URL = "mongodb+srv://sinproject251201:subhan321@cluster0.rngsv.mongodb.net/book-task4";
+beforeAll(async () => {
+  await mongoose.connect(process.env.MONGODB_URI || 'mongodb://mongo-test:27017/testdb');
+});
 
-export const setupTestDB = async () => {
-  try {
-    await mongoose.connect(TEST_DB_URL);
-    console.log("Connected to test database");
-  } catch (error) {
-    console.error("Error connecting to test database:", error);
-    process.exit(1);
-  }
-};
+afterAll(async () => {
+  await mongoose.connection.close();
+});
 
-export const teardownTestDB = async () => {
-  try {
-    await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
-    console.log("Database connection closed");
-  } catch (error) {
-    console.error("Error closing database connection:", error);
-  }
-};
-
-export const clearTestDB = async () => {
+afterEach(async () => {
+  // Perbaiki error iterator dengan menggunakan toArray()
   const collections = mongoose.connection.collections;
+  
+  // Iterate over collections object
   for (const key in collections) {
-    await collections[key].deleteMany({});
+    const collection = collections[key];
+    await collection.deleteMany({});
   }
-};
+});
